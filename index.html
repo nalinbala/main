@@ -1,0 +1,1467 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Merged CVD Report</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Merriweather:wght@700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* =======================================================
+      | Page-1 Styles (from style.css)
+      ======================================================= */
+      /* Existing Global Reset */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      /* Base Body Styles (Page 1 sets the background) */
+      body {
+        background-color: #616261;
+        font-family: Georgia, Times, "Times New Roman", serif;
+      }
+
+      /* ==============================
+      MOBILE INTRO (Full Height)
+      ==============================
+      */
+      .green {
+        background-color: #616261;
+        width: 100%;
+        /* CRITICAL CHANGE: Set height to 100vh for a full-screen view */
+        height: 100vh;
+        color: #fff;
+        text-align: center;
+        /* Use Flexbox to vertically center the text content */
+        display: flex;
+        flex-direction: column;
+        justify-content: center; /* Center vertically */
+        align-items: center; /* Center horizontally */
+
+        /* Remove excessive fixed padding and rely on Flexbox centering */
+        padding: 0 20px;
+      }
+
+      .green h1 {
+        /* Adjust font size for mobile readability and impact */
+        font-size: 92px;
+        line-height: 1;
+        margin-bottom: 5px;
+        text-shadow: 2px 5px 5px #424242;
+      }
+      .green h5 {
+        font-size: 34px; /* Slightly larger for emphasis */
+        line-height: 1.2;
+      }
+
+      /* ==============================
+      CVD STATEMENTS SEQUENCE
+      ==============================
+      */
+      .stat-sequence {
+        background-color: #616261; /* Dark background color */
+        width: 100%;
+        /* The height determines the total scroll distance for this section */
+        height: 400vh; /* 4 statements * 100vh each = 400vh scroll space */
+        position: relative;
+      }
+
+      .stat-pin-container {
+        width: 100%;
+        height: 100vh;
+        display: flex;
+        justify-content: center; /* Center horizontally */
+        align-items: center; /* Center vertically */
+
+        /* Pin this container for the entire sequence */
+        position: sticky;
+        top: 0;
+
+        /* Ensure the text is readable and occupies a good portion of the screen */
+        padding: 0 10vw; /* Padding on the sides for desktop/mobile */
+        text-align: center;
+      }
+
+      .stat-text {
+        color: #fff;
+        /* Position elements to overlap exactly in the center */
+        position: absolute;
+        width: 80%; /* Limit text width for better readability */
+        max-width: 900px;
+
+        /* Styles for the statement text */
+        font-size: clamp(24px, 4vw, 52px); /* Responsive font size */
+        line-height: 1.4;
+        font-weight: 300;
+
+        /* Start all statements invisible */
+        opacity: 0;
+      }
+
+      .pink {
+        background-color: #616261;
+
+        margin: 120px auto 40px auto;
+        text-align: center;
+        color: #fff;
+      }
+
+      .pink h2 {
+        font-family: Georgia, "Times New Roman", Times, serif;
+        text-align: left;
+      }
+
+      /* ==============================
+      CANVAS SEQUENCE SECTION (Shared Styles)
+      ==============================
+      */
+
+      .pin-sequence,
+      .pin-sequence-young {
+        height: 100vh;
+        position: relative;
+      }
+
+      .scroll-container {
+        /* Stacked layout for mobile */
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        height: 100vh;
+        padding-top: 20px;
+      }
+
+      /* Canvas: Full width on mobile */
+      canvas {
+        width: 90vw;
+        height: auto;
+        aspect-ratio: 1702 / 1550;
+        image-rendering: crisp-edges;
+        image-rendering: pixelated;
+        margin-bottom: 20px;
+      }
+
+      /* Text Container: Full width below canvas on mobile */
+      .scroll-text {
+        padding: 0 20px;
+        width: 100%;
+        text-align: center;
+        font-size: 1rem;
+        color: #fff;
+      }
+
+      #weight-text,
+      #weight-text-young {
+        font-size: 2rem; /* Updated from 1rem to 2rem */
+        line-height: 1.6;
+      }
+
+      /* New Data Text Styles */
+      .data-year {
+        color: #ffc107; /* Yellow color for the year */
+        font-size: 2em; /* Larger than the rest of the text */
+        display: block; /* Ensures it occupies its own line */
+      }
+
+      .data-count {
+        color: #fff;
+        font-weight: bold;
+        display: block; /* Ensures it occupies its own line */
+        line-height: 1.2;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      /* ==============================
+      DESKTOP STYLES (Min-width: 1025px) - NEW 75/25 SPLIT
+      ==============================
+      */
+
+      @media (min-width: 1025px) {
+        .green {
+          /* Revert to desktop styles */
+          height: 1550px; /* Restore desktop height if necessary for the rest of the flow */
+          padding-top: 300px;
+          padding-bottom: 400px;
+          font-size: 52px;
+          line-height: 50px;
+          /* Reset flex properties */
+          display: block;
+          justify-content: initial;
+          align-items: initial;
+          text-align: center;
+        }
+        .green h1 {
+          font-size: 82px;
+        }
+
+        /* Sequence container reverts to side-by-side (Applies to both sequences) */
+        .scroll-container {
+          flex-direction: row;
+          justify-content: center;
+          align-items: center;
+          padding-top: 0;
+        }
+
+        /* Set Canvas (Visual) to 75% width (Applies to both canvases) */
+        canvas {
+          width: 75vw; /* Changed from 50vw to 75vw */
+          margin-bottom: 0;
+        }
+
+        /* Set Text Container to 25% width (Applies to both text areas) */
+        .scroll-text {
+          padding: 150px 20px 150px 20px; /* Reduced padding for the 25% width */
+          width: 25vw; /* Changed from 50vw to 25vw */
+          text-align: left; /* Keep text aligned left */
+          font-size: 1.5rem;
+        }
+
+        /* Ensure #weight-text is styled to be large and clear */
+        #weight-text,
+        #weight-text-young {
+          font-size: 2rem;
+          line-height: 1.2;
+        }
+      }
+
+      /* =======================================================
+      | Page-2 Styles (from <style> block)
+      ======================================================= */
+      /* Overriding/extending body styles for Page-2 content */
+      .cvd-section {
+        width: 100%;
+        padding: 40px 20px;
+        box-sizing: border-box;
+        margin-top: 200px;
+      }
+
+      .content {
+        max-width: 580px;
+        margin: 0 auto;
+      }
+
+      .intro {
+        font-size: 22px;
+        line-height: 30px;
+        font-weight: 400;
+        margin-bottom: 36px;
+        color: #fff;
+      }
+
+      /* Note: H2 is now styled by Page-2 rules for the .content section */
+      .cvd-section h2 {
+        font-family: "Merriweather", serif;
+        font-size: 32px;
+        line-height: 42px;
+        font-weight: 700;
+        margin-bottom: 20px;
+        color: #fff;
+      }
+
+      .disease-info p {
+        font-size: 22px;
+        line-height: 30px;
+        margin-bottom: 42px;
+        color: #fff;
+      }
+
+      .disease-info strong {
+        font-family: "Merriweather", serif;
+        font-weight: 700;
+        font-size: 24px;
+        line-height: 32px;
+        color: #fff;
+      }
+
+      .heart-section {
+        margin-top: 160px;
+      }
+
+      .heart-section h3 {
+        font-family: "Merriweather", serif;
+        font-size: 32px;
+        line-height: 42px;
+        font-weight: 700;
+        margin-bottom: 10px;
+        color: #fff;
+      }
+
+      .heart-section p {
+        font-size: 22px;
+        line-height: 34px;
+        font-weight: 400;
+        color: #fff;
+      }
+
+      /* ===== Responsive text scaling for main content ===== */
+      @media (max-width: 640px) {
+        .content {
+          padding: 0 10px;
+        }
+
+        .cvd-section h2,
+        .heart-section h3 {
+          font-size: 26px;
+          line-height: 36px;
+        }
+
+        .disease-info strong {
+          font-size: 20px;
+          line-height: 28px;
+        }
+
+        .disease-info p,
+        .intro,
+        .heart-section p {
+          font-size: 18px;
+          line-height: 26px;
+        }
+      }
+
+      /* ===== AI2HTML Responsive Fix for g-Bubbles-box ===== */
+      .image-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+
+      .ai2html {
+        width: 100%;
+        max-width: 580px;
+        margin: 0 auto;
+        position: relative;
+      }
+
+      .ai2html .g-artboard {
+        width: 100%;
+        height: auto;
+        position: relative;
+      }
+
+      .ai2html .g-artboard > div:first-child {
+        width: 100%;
+        height: 0;
+        padding-bottom: calc(382 / 568 * 100%);
+      }
+
+      .ai2html .g-artboard-inner {
+        position: absolute;
+        top: 0;
+        left: 0;
+        transform-origin: top left;
+        width: 568px;
+        height: 382px;
+        transition: transform 0.25s ease-in-out;
+      }
+
+      /* Default AI2HTML text */
+      .ai2html p {
+        margin: 0;
+        color: #fff;
+        font-size: 18px;
+        line-height: 24px;
+      }
+
+      .ai2html .g-aiAbs {
+        position: absolute;
+      }
+
+      .ai2html .g-pstyle0 {
+        text-align: right;
+      }
+      .ai2html .g-pstyle1 {
+        font-weight: 700;
+        font-style: italic;
+        text-align: right;
+      }
+      .ai2html .g-pstyle2 {
+        font-weight: 700;
+        font-style: italic;
+      }
+
+      /* =======================================================
+      | Heart Attack Page Styles (Enlarged Image)
+      ======================================================= */
+      .heart-attack-page {
+        width: 100%;
+        padding: 50px 0;
+        box-sizing: border-box;
+        margin-top: 100px;
+      }
+
+      .heart-attack-container {
+        max-width: 1400px;
+        width: 90%;
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+
+      .heart-attack-title {
+        margin-bottom: 40px;
+        color: white;
+      }
+
+      .heart-attack-pre-title {
+        font-family: "Merriweather", serif;
+        font-weight: bold;
+        font-size: 28px;
+        line-height: 1.5;
+        margin-bottom: 5px;
+      }
+
+      .heart-attack-main-title {
+        font-family: "Merriweather", serif;
+        font-weight: bold;
+        font-size: 28px;
+        line-height: 1.5;
+        margin-bottom: 0;
+      }
+
+      .heart-attack-content {
+        display: flex;
+        justify-content: space-between;
+        gap: 50px;
+      }
+
+      /* --- CRITICAL CHANGE FOR IMAGE SIZE --- */
+      .heart-attack-image-area {
+        flex: 3; /* Increased from 2 to 3 to take up ~65-70% of the available space */
+        min-width: 60%;
+        max-width: 900px; /* Cap the max size for very large screens */
+      }
+
+      /* AI2HTML for Heart Diagram Specific Styles */
+      #g-HeartImage-box {
+        /* Ensure the container uses all available width */
+        width: 100%;
+        max-width: 100%;
+      }
+      #g-HeartImage-box .g-artboard {
+        max-width: 100%; /* Important: Let the artboard fill the new, larger parent */
+        /* Original max-width was 837px, we now let it stretch further */
+      }
+
+      #g-HeartImage-box p {
+        font-family: "Roboto", sans-serif;
+        font-weight: 500;
+        font-size: 16px;
+        line-height: 21px;
+      }
+      #g-HeartImage-Artboard_1 .g-pstyle0 {
+        font-weight: 700;
+        line-height: 19px;
+        font-size: 18px;
+        text-align: right;
+      }
+      /* -------------------------------------- */
+
+      .heart-attack-text {
+        flex: 1;
+        min-width: 30%;
+        color: white;
+        font-family: "Roboto", sans-serif;
+        font-weight: 400; /* Regular */
+        font-size: 16px;
+        line-height: 1.5; /* Line-height 1.5 as specified */
+        padding-top: 10px;
+      }
+
+      .heart-attack-text p {
+        margin-top: 0;
+        margin-bottom: 25px;
+      }
+
+      .heart-attack-text strong {
+        font-weight: 700; /* Ensure bold text stands out */
+      }
+
+      /* Mobile adjustments for the new section */
+      @media (max-width: 1024px) {
+        .heart-attack-container {
+          width: 95%;
+          padding: 0 15px;
+        }
+        .heart-attack-content {
+          flex-direction: column;
+          gap: 30px;
+        }
+        .heart-attack-image-area,
+        .heart-attack-text {
+          min-width: 100%;
+        }
+        .heart-attack-pre-title,
+        .heart-attack-main-title {
+          font-size: 24px;
+        }
+        .heart-attack-text {
+          font-size: 15px;
+        }
+      }
+
+      /* =======================================================
+      | AI2HTML Styles for Heart Diagram (from HeartImage.html)
+      ======================================================= */
+      #g-HeartImage-box,
+      #g-HeartImage-box .g-artboard {
+        margin: 0 auto;
+      }
+      #g-HeartImage-box p {
+        margin: 0;
+      }
+      #g-HeartImage-box .g-aiAbs {
+        position: absolute;
+      }
+      #g-HeartImage-box .g-aiImg {
+        position: absolute;
+        top: 0;
+        display: block;
+        width: 100% !important;
+      }
+      #g-HeartImage-box .g-aiSymbol {
+        position: absolute;
+        box-sizing: border-box;
+      }
+      #g-HeartImage-box .g-aiPointText p {
+        white-space: nowrap;
+      }
+      #g-HeartImage-Artboard_1 {
+        position: relative;
+        overflow: hidden;
+      }
+      #g-HeartImage-Artboard_1 p {
+        font-weight: 500;
+        line-height: 21px;
+        opacity: 1;
+        letter-spacing: 0em;
+        font-size: 16px;
+        text-align: left;
+        color: rgb(255, 255, 255);
+        text-transform: none;
+        padding-bottom: 0;
+        padding-top: 0;
+        mix-blend-mode: normal;
+        font-style: normal;
+        height: auto;
+        position: static;
+      }
+      #g-HeartImage-Artboard_1 .g-pstyle0 {
+        font-weight: 700;
+        line-height: 19px;
+        font-size: 18px;
+        text-align: right;
+      }
+      #g-HeartImage-Artboard_1 .g-pstyle1 {
+        height: 21px;
+      }
+      #g-HeartImage-Artboard_1 .g-pstyle2 {
+        text-align: right;
+      }
+
+      /* =======================================================
+      | Common Heart Attack Symptoms Page Styles
+      ======================================================= */
+      .symptoms-page {
+        width: 100%;
+        min-height: 100vh;
+        padding: 50px 0;
+        box-sizing: border-box;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 100px;
+      }
+
+      .symptoms-container {
+        display: grid;
+        grid-template-columns: 25% 75%; /* Column 1 (text) and Columns 2-3 (image) */
+        width: 90%;
+        max-width: 1400px;
+        margin: 0 auto;
+      }
+
+      /* --- Column 1 Content --- */
+      .symptoms-col-1 {
+        padding: 30px;
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        color: white;
+        font-family: "Roboto", sans-serif;
+      }
+
+      .symptoms-title {
+        font-family: "Merriweather", serif;
+        font-size: 32px;
+        font-weight: bold;
+        line-height: 1.1;
+        margin-bottom: 5px;
+      }
+
+      .symptom-text {
+        font-size: 16px;
+        line-height: 1.5;
+        font-weight: normal;
+      }
+
+      .pain-area-label {
+        display: flex;
+        align-items: center;
+        font-size: 16px;
+        line-height: 1.5;
+        font-weight: normal;
+        margin-top: 10px;
+        margin-bottom: 5px;
+      }
+
+      .pain-area-label::before {
+        content: "";
+        width: 28px;
+        height: 28px;
+        background-color: #f9c511;
+        margin-right: 10px;
+        flex-shrink: 0;
+      }
+
+      .gastritis-warning {
+        background-color: #f9c511;
+        color: #1a1a1a;
+        padding: 15px;
+        font-size: 16px;
+        font-weight: bold;
+        line-height: 1.5;
+        box-sizing: border-box;
+        border-radius: 10px;
+      }
+
+      .human-image-container {
+        position: relative;
+        width: 100%;
+        min-height: 350px;
+        margin-bottom: 5px;
+      }
+
+      .human-image-container img {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        height: 100%;
+        max-height: 400px;
+        object-fit: contain;
+        width: auto;
+      }
+
+      /* --- Columns 2-3 (AI2HTML section) --- */
+      .symptoms-col-2-3 {
+        height: 100vh; /* Full viewport height */
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      /* AI2HTML Styles for Symptoms Diagram */
+      #g-symptoms-box,
+      #g-symptoms {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        max-width: none !important;
+        max-height: none !important;
+      }
+
+      #g-symptoms-img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: contain; /* Show the entire image */
+      }
+
+      #g-symptoms .g-aiAbs {
+        position: absolute;
+        z-index: 2;
+      }
+
+      #g-symptoms-box .g-artboard {
+        margin: 0;
+        position: relative;
+        width: 100%;
+        height: 100%;
+      }
+
+      /* --- Text inside AI2HTML --- */
+      #g-symptoms-box p {
+        margin: 0;
+      }
+
+      #g-symptoms p {
+        font-weight: 500;
+        line-height: 24px;
+        font-size: 16px;
+        text-align: left;
+        color: #fff;
+      }
+
+      #g-symptoms .g-pstyle0 {
+        text-align: right;
+      }
+
+      #g-symptoms .g-pstyle1 {
+        line-height: 23px;
+      }
+
+      /* --- Responsive Layout for Symptoms Page --- */
+      @media (max-width: 1024px) {
+        .symptoms-container {
+          grid-template-columns: 1fr;
+          width: 95%;
+          padding: 0 15px;
+        }
+
+        .symptoms-col-2-3 {
+          height: 600px; /* Give it a fixed height on mobile */
+          min-height: 500px;
+        }
+
+        .symptoms-col-1 {
+          padding: 30px 0;
+        }
+
+        .symptoms-title {
+          font-size: 28px;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .symptoms-col-2-3 {
+          height: 450px;
+        }
+      }
+    </style>
+    <style media="screen,print">
+      #g-HeartImage-box,
+      #g-HeartImage-box .g-artboard {
+        margin: 0 auto;
+      }
+      #g-HeartImage-box p {
+        margin: 0;
+      }
+      #g-HeartImage-box .g-aiAbs {
+        position: absolute;
+      }
+      #g-HeartImage-box .g-aiImg {
+        position: absolute;
+        top: 0;
+        display: block;
+        width: 100% !important;
+      }
+      #g-HeartImage-box .g-aiSymbol {
+        position: absolute;
+        box-sizing: border-box;
+      }
+      #g-HeartImage-box .g-aiPointText p {
+        white-space: nowrap;
+      }
+      #g-HeartImage-Artboard_1 {
+        position: relative;
+        overflow: hidden;
+      }
+      #g-HeartImage-Artboard_1 p {
+        font-weight: 500;
+        line-height: 21px;
+        opacity: 1;
+        letter-spacing: 0em;
+        font-size: 16px;
+        text-align: left;
+        color: rgb(255, 255, 255);
+        text-transform: none;
+        padding-bottom: 0;
+        padding-top: 0;
+        mix-blend-mode: normal;
+        font-style: normal;
+        height: auto;
+        position: static;
+      }
+      #g-HeartImage-Artboard_1 .g-pstyle0 {
+        font-weight: 700;
+        line-height: 19px;
+        font-size: 18px;
+        text-align: right;
+      }
+      #g-HeartImage-Artboard_1 .g-pstyle1 {
+        height: 21px;
+      }
+      #g-HeartImage-Artboard_1 .g-pstyle2 {
+        text-align: right;
+      }
+    </style>
+  </head>
+  <body>
+    <section class="green">
+      <h1>Gone Too Soon</h1>
+      <br />
+      <h5>The Rise of Young Heart Deaths</h5>
+    </section>
+
+    <section class="stat-sequence">
+      <div class="stat-pin-container">
+        <p class="stat-text"></p>
+        <p class="stat-text"></p>
+        <p class="stat-text"></p>
+        <p class="stat-text"></p>
+      </div>
+    </section>
+
+    <section class="pin-sequence">
+      <div class="scroll-container">
+        <canvas id="seq-canvas" width="1702" height="1550"></canvas>
+        <div class="scroll-text"><div id="weight-text"></div></div>
+      </div>
+    </section>
+
+    <section class="cvd-section">
+      <div class="content">
+        <p class="intro">
+          <strong>Cardiovascular diseases (CVD)</strong> are conditions that
+          affect <br />1. heart <br />2. blood vessels
+        </p>
+
+        <h2>Deaths resulting from major circulatory system diseases in 2020</h2>
+
+        <div class="image-container">
+          <div id="g-Bubbles-box" class="ai2html">
+            <div id="g-Bubbles-Artboard_1" class="g-artboard">
+              <div></div>
+              <div class="g-artboard-inner">
+                <img
+                  class="g-aiImg"
+                  alt="Deaths from circulatory system diseases"
+                  src="images/Bubbles-Artboard_1.png"
+                />
+                <div
+                  class="g-aiAbs"
+                  style="top: 7.8%; right: 5.1%; width: 27.5%"
+                >
+                  <p class="g-pstyle0">Cerebrovascular diseases</p>
+                  <p class="g-pstyle1">4,962</p>
+                </div>
+                <div
+                  class="g-aiAbs"
+                  style="top: 7.8%; left: 4.4%; width: 25.9%"
+                >
+                  <p>Ischaemic heart disease</p>
+                  <p class="g-pstyle2">15,761</p>
+                </div>
+                <div
+                  class="g-aiAbs"
+                  style="top: 69%; right: 5.3%; width: 19.5%"
+                >
+                  <p class="g-pstyle0">Other heart diseases</p>
+                  <p class="g-pstyle1">7,974</p>
+                </div>
+                <div
+                  class="g-aiAbs"
+                  style="top: 70.2%; left: 4.4%; width: 24.8%"
+                >
+                  <p>Hypertensive diseases</p>
+                  <p class="g-pstyle2">4,266</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="disease-info">
+          <p>
+            <strong>Hypertensive diseases:</strong> Problems from high blood
+            pressure, e.g., heart failure, stroke risk.
+          </p>
+          <p>
+            <strong>Ischaemic heart disease:</strong> Narrowed arteries reduce
+            blood to the heart, causing angina or heart attack.
+          </p>
+          <p>
+            <strong>Other heart diseases:</strong> Includes cardiomyopathy,
+            arrhythmias, congenital defects, and inflammation.
+          </p>
+          <p>
+            <strong>Cerebrovascular diseases:</strong> Blood vessel disorders in
+            the brain, mainly stroke and TIAs (Transient Ischemic Attack).
+          </p>
+        </div>
+
+        <div class="heart-section">
+          <h3>The human heart</h3>
+          <p>
+            The human heart, about the size of a fist, is the body’s strongest
+            muscle. It begins beating just three weeks after conception and, by
+            age 70, will have beaten 2.5 billion times. Through 97,000 km of
+            blood vessels, it pumps blood to deliver oxygen and nutrients while
+            removing waste.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="heart-attack-page">
+      <div class="heart-attack-container">
+        <div class="heart-attack-title">
+          <h2 class="heart-attack-main-title">
+            What happens during a heart attack
+          </h2>
+        </div>
+
+        <div class="heart-attack-content">
+          <div class="heart-attack-image-area">
+            <div id="g-HeartImage-box" class="ai2html">
+              <div
+                id="g-HeartImage-Artboard_1"
+                class="g-artboard"
+                style="max-width: 837px; max-height: 625px"
+                data-aspect-ratio="1.339"
+                data-min-width="0"
+              >
+                <div style="padding: 0 0 74.6995% 0"></div>
+                <img
+                  id="g-HeartImage-Artboard_1-img"
+                  class="g-HeartImage-Artboard_1-img g-aiImg"
+                  alt="Anatomy of the heart showing arteries and blockages."
+                  src="images/HeartImage-Artboard_1.jpg"
+                />
+                <div
+                  id="g-ai0-1"
+                  class="g-Layer_1 g-aiAbs"
+                  style="top: 8.6368%; right: 5.5241%; width: 10.1553%"
+                >
+                  <p class="g-pstyle0">coronary artery</p>
+                </div>
+                <div
+                  id="g-ai0-2"
+                  class="g-Layer_1 g-aiAbs"
+                  style="top: 9.2765%; left: 37.479%; width: 6.81%"
+                >
+                  <p>Aorta</p>
+                </div>
+                <div
+                  id="g-ai0-3"
+                  class="g-Layer_1 g-aiAbs"
+                  style="top: 16.4738%; left: 2.2994%; width: 10.3943%"
+                >
+                  <p>Superior</p>
+                  <p>vena cava</p>
+                </div>
+                <div
+                  id="g-ai0-4"
+                  class="g-Layer_1 g-aiAbs g-aiPointText"
+                  style="
+                    top: 22.263%;
+                    margin-top: -11.2px;
+                    left: 88.0292%;
+                    width: 74px;
+                  "
+                >
+                  <p class="g-pstyle1">Plaques</p>
+                </div>
+                <div
+                  id="g-ai0-5"
+                  class="g-Layer_1 g-aiAbs"
+                  style="top: 24.9506%; right: 37.0108%; width: 10.6332%"
+                >
+                  <p class="g-pstyle2">Left main</p>
+                  <p class="g-pstyle2">coronary artery</p>
+                </div>
+                <div
+                  id="g-ai0-6"
+                  class="g-Layer_1 g-aiAbs"
+                  style="top: 41.7443%; left: 2.2994%; width: 9.08%"
+                >
+                  <p>Right</p>
+                  <p>coronary artery</p>
+                </div>
+                <div
+                  id="g-ai0-7"
+                  class="g-Layer_1 g-aiAbs"
+                  style="top: 59.9775%; right: 36.9433%; width: 10.3943%"
+                >
+                  <p class="g-pstyle2">Site of</p>
+                  <p class="g-pstyle2">blockage</p>
+                </div>
+                <div
+                  id="g-ai0-8"
+                  class="g-Layer_1 g-aiAbs"
+                  style="top: 60.6173%; left: 69.1052%; width: 9.08%"
+                >
+                  <p>Narrowed</p>
+                  <p>artery</p>
+                </div>
+                <div
+                  id="g-ai0-9"
+                  class="g-Layer_1 g-aiAbs"
+                  style="top: 73.2525%; right: 36.9833%; width: 8.3632%"
+                >
+                  <p class="g-pstyle2">Blood</p>
+                  <p class="g-pstyle2">supply</p>
+                  <p class="g-pstyle2">blocked</p>
+                </div>
+                <div
+                  id="g-ai0-10"
+                  class="g-Layer_1 g-aiAbs"
+                  style="top: 75.0119%; left: 69.1052%; width: 5.8542%"
+                >
+                  <p>Blood clot</p>
+                </div>
+                <div
+                  id="g-ai0-11"
+                  class="g-Layer_1 g-aiAbs"
+                  style="top: 87.6471%; right: 36.9547%; width: 11.1111%"
+                >
+                  <p class="g-pstyle2">Dead heart muscle tissue</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="heart-attack-text">
+            <p>
+              When the <strong>coronary arteries</strong> (heart arteries) that
+              supply blood to the heart muscle become narrowed or blocked by
+              fatty deposits called plaques, blood flow and oxygen to the heart
+              are reduced. This can cause chest pain, known as
+              <strong>angina</strong>.
+            </p>
+
+            <p>
+              If a coronary artery becomes completely blocked—often by a
+              <strong>blood clot</strong> forming on a ruptured plaque—the part
+              of the heart muscle supplied by that artery is starved of oxygen
+              and nutrients. Within about 30 minutes, heart muscle cells begin
+              to die, and most of the damage occurs within 6 to 12 hours.
+            </p>
+
+            <p>
+              This death of heart muscle tissue is called a
+              <strong>heart attack</strong> (<strong
+                >myocardial infarction</strong
+              >)—a medical emergency that requires immediate treatment.
+              Ischaemic heart disease (<strong>coronary artery disease</strong
+              >), which includes heart attacks, is the leading cause of death
+              worldwide, linked to risk factors such as high blood pressure,
+              diabetes, smoking, high cholesterol, obesity, and lack of physical
+              activity. In 2020, more than 15,000 Sri Lankans died from
+              ischaemic heart disease.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="symptoms-page">
+      <div class="symptoms-container">
+        <div class="symptoms-col-1">
+          <h1 class="symptoms-title">Common heart attack symptoms</h1>
+
+          <div class="symptom-text">
+            Pain or discomfort spreading to the
+            <strong>shoulders, arms</strong> (especially the left arm),
+            <strong>back, neck, jaw, or upper abdomen.</strong>
+          </div>
+
+          <div class="human-image-container">
+            <img
+              src="human.png"
+              alt="A human silhouette with highlighted areas showing where heart attack pain is most likely felt."
+            />
+          </div>
+
+          <div class="pain-area-label">
+            The areas where pain is most likely felt
+          </div>
+
+          <div class="gastritis-warning">
+            Many heart attacks are
+            <strong>mistaken for gastritis</strong> because early symptoms can
+            feel similar — a delay that can be deadly.
+          </div>
+        </div>
+
+        <div class="symptoms-col-2-3">
+          <div id="g-symptoms-box" class="ai2html">
+            <div
+              id="g-symptoms"
+              class="g-artboard"
+              style="width: 100%; height: 100%"
+              data-aspect-ratio="0.911"
+              data-min-width="0"
+            >
+              <img
+                id="g-symptoms-img"
+                class="g-symptoms-img g-aiImg"
+                alt="An illustration of a man clutching his chest in pain."
+                src="symptoms.jpg"
+              />
+              <div
+                id="g-ai0-1"
+                class="g-Layer_1 g-aiAbs"
+                style="top: 5.0375%; right: 1.7259%; width: 21.6741%"
+              >
+                <p class="g-pstyle0">Lightheadedness, dizziness, or fainting</p>
+              </div>
+              <div
+                id="g-ai0-2"
+                class="g-Layer_1 g-aiAbs"
+                style="top: 18.7884%; right: 1.683%; width: 23.4679%"
+              >
+                <p class="g-pstyle0">
+                  Shortness of breath — with or without chest pain
+                </p>
+              </div>
+              <div
+                id="g-ai0-3"
+                class="g-Layer_1 g-aiAbs"
+                style="top: 21.7837%; left: 22.7987%; width: 15.6951%"
+              >
+                <p>Nausea or vomiting</p>
+              </div>
+              <div
+                id="g-ai0-4"
+                class="g-Layer_1 g-aiAbs"
+                style="top: 46.2904%; left: 1.747%; width: 24.0658%"
+              >
+                <p>
+                  Chest pain, pressure, tightness, or discomfort — often lasting
+                  more than a few minutes, or coming and going
+                </p>
+              </div>
+              <div
+                id="g-ai0-5"
+                class="g-Layer_1 g-aiAbs"
+                style="top: 69.844%; left: 1.747%; width: 23.7668%"
+              >
+                <p>Fatigue or unusual tiredness, especially in women</p>
+              </div>
+              <div
+                id="g-ai0-6"
+                class="g-Layer_1 g-aiAbs"
+                style="top: 84.9564%; left: 16.0353%; width: 13.6024%"
+              >
+                <p class="g-pstyle1">Cold sweating</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="pin-sequence-young">
+      <div class="scroll-container">
+        <canvas id="seq-canvas-young" width="1702" height="1550"></canvas>
+        <div class="scroll-text"><div id="weight-text-young"></div></div>
+      </div>
+    </section>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script>
+      // =======================================================
+      // | 1. Global Setup & Conflict Resolution (New Pathing)
+      // =======================================================
+      // Separate path functions to resolve the image folder conflict
+      // IMPORTANT: Ensure you have two folders: 'frames-narrative' and 'frames-data'
+      const narrativeFramePath = (index) =>
+        `frames-narrative/frame_${index.toString().padStart(4, "0")}.jpg`;
+      const dataFramePath = (index) =>
+        `frames-data/frame_${index.toString().padStart(4, "0")}.jpg`;
+
+      // =======================================================
+      // | 2. Narrative Canvas Sequence (Existing - ID: seq-canvas)
+      // =======================================================
+      const frameCount = 7; // Number of frames for the Narrative sequence
+      const images = [];
+      const canvas = document.getElementById("seq-canvas");
+      const context = canvas.getContext("2d");
+      const weightText = document.getElementById("weight-text");
+
+      canvas.width = 1702;
+      canvas.height = 1550;
+
+      const textArray = [
+        "Sugath Nuwan, 34, is a father of three and a retired Navy sailor. He is a novelist who has won the hearts of readers by writing more than 1000 novels on Facebook for over 10 years. He died at a young age on August 30 due to a heart attack while on his way to the hospital due to chest pain.",
+        "Not only him, We now hear about young deaths from similar heart attacks every day.",
+        "Among them are famous musicians, politicians, and athletes, and their loss leaves a huge void that society cannot fill.",
+        "More and more individuals between the ages of 20 and 40 are suffering heart attacks. This number is increasing by the day. Out of ten patients presenting for treatment, at least four or five are under the age of 40.",
+        "Data indicates that deaths from ischaemic heart disease in young people have more than doubled over the past decade.",
+        // Narrative text replacing the old data summary which is now covered in the new sequence.
+        "The sharp increase is attributed to factors like rising obesity, diabetes, and sedentary lifestyles among young adults.",
+        ".",
+      ];
+
+      // Updated preloadImages to accept the correct path generator
+      const preloadImages = (count, imgArray, pathGenerator) => {
+        for (let i = 0; i < count; i++) {
+          const img = new Image();
+          // Use the dynamic path generator
+          img.src = pathGenerator(i);
+          imgArray.push(img);
+        }
+      };
+
+      // Reusable render function updated to take all necessary parameters
+      function render(index, targetCanvas, imgArray) {
+        const img = imgArray[index];
+        if (!img || !img.complete) return;
+
+        const context = targetCanvas.getContext("2d");
+        const canvasAspect = targetCanvas.width / targetCanvas.height;
+        const imgAspect = img.width / img.height;
+
+        let drawWidth, drawHeight;
+
+        if (imgAspect > canvasAspect) {
+          drawWidth = targetCanvas.width;
+          drawHeight = targetCanvas.width / imgAspect;
+        } else {
+          drawHeight = targetCanvas.height;
+          drawWidth = targetCanvas.height * imgAspect;
+        }
+
+        const x = (targetCanvas.width - drawWidth) / 2;
+        const y = (targetCanvas.height - drawHeight) / 2;
+
+        context.clearRect(0, 0, targetCanvas.width, targetCanvas.height);
+        context.drawImage(img, x, y, drawWidth, drawHeight);
+      }
+
+      // =======================================================
+      // | 3. Data Canvas Sequence (NEW - ID: seq-canvas-young)
+      // =======================================================
+
+      const frameCountYoung = 8;
+      const imagesYoung = [];
+      const canvasYoung = document.getElementById("seq-canvas-young");
+      const weightTextYoung = document.getElementById("weight-text-young");
+
+      const textArrayYoung = [
+        "2010 228 deaths.",
+        "2011 287 deaths.",
+        "2012 249 deaths.",
+        "2013 231 deaths.",
+        "2014 259 deaths.",
+        "2015 432 deaths.",
+        "2019 656 deaths.",
+        "2020 620 deaths.",
+      ];
+
+      // Re-usable function to handle text update and formatting
+      function updateTextAndFormat(index, textEl, textArr) {
+        if (textArr[index]) {
+          const fullText = textArr[index];
+          // Regex to split the year (first 4 digits) from the rest of the text
+          const match = fullText.match(/^(\d{4})\s*(.*)$/);
+
+          if (match) {
+            const year = match[1];
+            const count = match[2];
+
+            // Construct the HTML with the required classes and structure
+            textEl.innerHTML = `
+              <span class="data-year">${year}</span>
+              <span class="data-count">${count}</span>
+            `;
+          } else {
+            // Fallback for non-year/count text
+            textEl.textContent = fullText;
+          }
+        }
+      }
+
+      window.addEventListener("load", () => {
+        // Preload images for BOTH sequences, using their dedicated path functions
+        preloadImages(frameCount, images, narrativeFramePath);
+        if (canvasYoung) {
+          preloadImages(frameCountYoung, imagesYoung, dataFramePath);
+        }
+
+        // ===================================
+        // A. STATEMENTS SEQUENCE (GSAP)
+        // ===================================
+        const statements = [
+          "Cardiovascular disease (CVD) is the world's number one killer.",
+          "Each year, the world loses as many people to cardiovascular disease (CVD) as the entire population of Sri Lanka—about 20.5 million lives.",
+          "In Sri Lanka, cardiovascular disease claims over 90 lives every day. This adds up to more than 33,000 deaths in a year.",
+          "Heart attacks and strokes cause 85% of all CVD deaths.",
+        ];
+
+        const statTexts = gsap.utils.toArray(".stat-text");
+
+        // Assign text content to the paragraphs
+        statTexts.forEach((p, i) => {
+          p.textContent = statements[i];
+        });
+
+        const sequenceDuration = 0.5; // Time for fade-in/out
+        const holdDuration = 0.5; // Time statement is fully visible (1 unit of scroll distance)
+
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: ".stat-sequence",
+            start: "top top",
+            end: "bottom top",
+            scrub: true,
+            pin: true, // Pin the whole section
+          },
+        });
+
+        // Animate each statement sequentially
+        statTexts.forEach((text, i) => {
+          // 1. Fade In
+          tl.to(text, { opacity: 1, duration: sequenceDuration }, `stat-${i}`)
+
+            // 2. Hold (Keep visible for a period of scroll)
+            .to(text, { opacity: 1, duration: holdDuration });
+
+          // 3. Fade Out
+          tl.to(text, { opacity: 0, duration: sequenceDuration });
+        });
+
+        // ===================================
+        // B. NARRATIVE CANVAS SEQUENCE (GSAP)
+        // ===================================
+        images[0].onload = () => render(0, canvas, images);
+        const scrollObj = { frame: 0 };
+
+        gsap.to(scrollObj, {
+          frame: frameCount - 1,
+          snap: { snapTo: 1, duration: 0.1 },
+          ease: "none",
+          scrollTrigger: {
+            trigger: ".pin-sequence",
+            start: "top top",
+            end: "+=" + frameCount * 500, // gives smoother scroll length
+            scrub: true,
+            pin: true,
+            anticipatePin: 1,
+          },
+          onUpdate: () => {
+            const current = Math.round(scrollObj.frame);
+            render(current, canvas, images);
+            updateTextAndFormat(current, weightText, textArray);
+          },
+        });
+
+        // ===================================
+        // C. DATA CANVAS SEQUENCE (GSAP) - NEW
+        // ===================================
+        if (canvasYoung) {
+          imagesYoung[0].onload = () => render(0, canvasYoung, imagesYoung);
+          const scrollObjYoung = { frame: 0 };
+
+          gsap.to(scrollObjYoung, {
+            frame: frameCountYoung - 1,
+            snap: { snapTo: 1, duration: 0.1 },
+            ease: "none",
+            scrollTrigger: {
+              trigger: ".pin-sequence-young",
+              start: "top top",
+              end: "+=" + frameCountYoung * 500, // gives smoother scroll length
+              scrub: true,
+              pin: true,
+              anticipatePin: 1,
+            },
+            onUpdate: () => {
+              const current = Math.round(scrollObjYoung.frame);
+              render(current, canvasYoung, imagesYoung);
+              // Use the dedicated text update function for data-focused formatting
+              updateTextAndFormat(current, weightTextYoung, textArrayYoung);
+            },
+          });
+        }
+
+        // =======================================================
+        // | AI2HTML Resize Function for all diagrams
+        // =======================================================
+        function resizeAi2html() {
+          // --- Logic for g-Bubbles-box (existing diagram) ---
+          const artboardBubbles = document.querySelector(
+            "#g-Bubbles-Artboard_1"
+          );
+          const innerBubbles = document.querySelector(
+            "#g-Bubbles-Artboard_1 .g-artboard-inner"
+          );
+          if (artboardBubbles && innerBubbles) {
+            const containerWidth = artboardBubbles.clientWidth;
+            const originalWidth = 568;
+            let scale = containerWidth / originalWidth;
+
+            if (window.innerWidth < 480) {
+              scale *= 1.15; // phones
+            } else if (window.innerWidth < 768) {
+              scale *= 1.05; // tablets
+            }
+
+            const scaledWidth = originalWidth * scale;
+            const offsetX = (containerWidth - scaledWidth) / 2;
+
+            innerBubbles.style.transform = `translate(${offsetX}px, 0) scale(${scale})`;
+          }
+
+          // --- Logic for g-HeartImage-box (Heart Anatomy diagram) ---
+          const artboardHeart = document.querySelector(
+            "#g-HeartImage-Artboard_1"
+          );
+          if (artboardHeart) {
+            const containerWidth = artboardHeart.parentElement.clientWidth;
+            const originalWidth = 837; // Base width from HeartImage.html
+            let scale = containerWidth / originalWidth;
+
+            artboardHeart.style.width = "100%";
+            artboardHeart.style.transform = `scale(${scale})`;
+            artboardHeart.style.transformOrigin = `top left`;
+          }
+
+          // --- Logic for g-symptoms-box (Symptoms diagram) ---
+          const artboardSymptoms = document.getElementById("g-symptoms");
+          if (artboardSymptoms) {
+            // Since the outer div `symptoms-col-2-3` has a dynamic height (100vh on desktop) and the
+            // image uses object-fit: contain, we need to scale the AI2HTML content
+            // based on the height of its container.
+            const containerHeight = artboardSymptoms.parentElement.clientHeight;
+            const containerWidth = artboardSymptoms.parentElement.clientWidth;
+
+            const originalWidth = 911;
+            const originalHeight = 1000;
+
+            // Calculate scale based on container height or width to ensure it fits and is centered.
+            let scale = Math.min(
+              containerWidth / originalWidth,
+              containerHeight / originalHeight
+            );
+
+            // Calculate the position to center the scaled artboard horizontally/vertically
+            const offsetX = (containerWidth - originalWidth * scale) / 2;
+            const offsetY = (containerHeight - originalHeight * scale) / 2;
+
+            // Apply the final scale and offset to the artboard
+            artboardSymptoms.style.transform = `translate(${offsetX}px, ${offsetY}px) scale(${scale})`;
+            artboardSymptoms.style.transformOrigin = "top left"; // Ensure scaling starts from the top-left
+
+            // Set fixed dimensions for the inner content block (which gets scaled)
+            artboardSymptoms.style.width = originalWidth + "px";
+            artboardSymptoms.style.height = originalHeight + "px";
+          }
+        }
+
+        window.addEventListener("resize", resizeAi2html);
+        resizeAi2html();
+      });
+    </script>
+  </body>
+</html>
